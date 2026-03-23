@@ -5,6 +5,7 @@ import Subscriptions from "../Dashboard/Subscriptions/Subscriptions";
 import AddSubscription from "../Dashboard/AddSubscription/AddSubscription";
 import EditSubscription from "../Dashboard/EditSubscription/EditSubscription";
 import Services from "../Dashboard/Services/Services";
+import Profile from "../Dashboard/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "add-subscription", Component: AddSubscription },
       { path: "edit-subscription", Component: EditSubscription },
       { path: "services", Component: Services },
+      { path: "profile", Component: Profile },
     ],
   },
 ]);

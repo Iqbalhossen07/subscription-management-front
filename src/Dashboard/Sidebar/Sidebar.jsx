@@ -1,11 +1,23 @@
 import React from "react";
 import { NavLink } from "react-router";
+// মডার্ন এবং প্রিমিয়াম আইকন ইমপোর্ট করছি
+import {
+  LayoutDashboard,
+  Repeat,
+  PlusCircle,
+  Settings,
+  UserCircle,
+  MoreHorizontal,
+  BarChart3,
+} from "lucide-react";
 
 function Sidebar({ isOpen, closeSidebar }) {
   return (
     <aside className={`sidebar ${isOpen ? "open" : ""}`} id="sidebar">
       <div className="sidebar-logo">
-        <div className="logo-icon">📊</div>
+        <div className="logo-icon">
+          <BarChart3 size={20} strokeWidth={2.5} />
+        </div>
         <div>
           <div className="logo-text">
             Sub<span>Track</span>
@@ -16,14 +28,16 @@ function Sidebar({ isOpen, closeSidebar }) {
       <nav className="sidebar-nav">
         <div className="sidebar-section-label">Overview</div>
 
-        {/* NavLink অটোমেটিক active ক্লাস অ্যাড করবে যদি URL ম্যাচ করে */}
         <NavLink
           to="/dashboard"
           end
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
           onClick={closeSidebar}
         >
-          <span className="nav-icon">🏠</span> Dashboard
+          <span className="nav-icon">
+            <LayoutDashboard size={18} />
+          </span>{" "}
+          Dashboard
         </NavLink>
 
         <NavLink
@@ -31,15 +45,26 @@ function Sidebar({ isOpen, closeSidebar }) {
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
           onClick={closeSidebar}
         >
-          <span className="nav-icon">🔁</span> Subscriptions
+          <span className="nav-icon">
+            <Repeat size={18} />
+          </span>{" "}
+          Subscriptions
           <span className="nav-badge">2</span>
         </NavLink>
 
         <div className="sidebar-section-label">Manage</div>
-        <div className="nav-item">
-          <span className="nav-icon">➕</span> Add Subscription
-        </div>
-      
+
+        <NavLink
+          to="/dashboard/add-subscription"
+          end
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          onClick={closeSidebar}
+        >
+          <span className="nav-icon">
+            <PlusCircle size={18} />
+          </span>{" "}
+          Add Subscription
+        </NavLink>
 
         <NavLink
           to="/dashboard/services"
@@ -47,13 +72,25 @@ function Sidebar({ isOpen, closeSidebar }) {
           className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
           onClick={closeSidebar}
         >
-          <span className="nav-icon">⚙️</span> Services
+          <span className="nav-icon">
+            <Settings size={18} />
+          </span>{" "}
+          Services
         </NavLink>
 
         <div className="sidebar-section-label">Account</div>
-        <div className="nav-item">
-          <span className="nav-icon">👤</span> Profile
-        </div>
+
+        <NavLink
+          to="/dashboard/profile"
+          end
+          className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          onClick={closeSidebar}
+        >
+          <span className="nav-icon">
+            <UserCircle size={18} />
+          </span>{" "}
+          Profile
+        </NavLink>
       </nav>
 
       <div className="sidebar-footer">
@@ -63,7 +100,9 @@ function Sidebar({ isOpen, closeSidebar }) {
             <div className="user-name">Alex Kim</div>
             <div className="user-role">Pro Plan</div>
           </div>
-          <div className="user-menu-icon">⋯</div>
+          <div className="user-menu-icon">
+            <MoreHorizontal size={18} />
+          </div>
         </div>
       </div>
     </aside>
