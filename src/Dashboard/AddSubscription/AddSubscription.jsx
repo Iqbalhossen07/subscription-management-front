@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router";
 
 function AddSubscription() {
+  const [sortCode, setSortCode] = useState("");
+
+  // Sort Code auto-format: 123456 → 12-34-56
+  const handleSortCode = (e) => {
+    const raw = e.target.value.replace(/\D/g, "").slice(0, 6);
+    const formatted =
+      raw.length <= 2
+        ? raw
+        : raw.length <= 4
+          ? `${raw.slice(0, 2)}-${raw.slice(2)}`
+          : `${raw.slice(0, 2)}-${raw.slice(2, 4)}-${raw.slice(4)}`;
+    setSortCode(formatted);
+  };
+
   return (
     <div className="page active">
+      {/* ── HEADER ── */}
       <div className="section-header">
         <div>
           <div className="section-title">Add Subscription</div>
@@ -14,6 +30,7 @@ function AddSubscription() {
 
       <div >
         <div className="card">
+          {/* ── SUBSCRIPTION DETAILS ── */}
           <div
             style={{
               fontWeight: 700,
@@ -27,7 +44,7 @@ function AddSubscription() {
           </div>
 
           <div className="form-grid">
-            {/* Service Selection */}
+            {/* Service */}
             <div className="form-group">
               <label className="form-label">Service *</label>
               <select className="form-select">
@@ -37,9 +54,12 @@ function AddSubscription() {
                   <option>Spotify</option>
                   <option>YouTube Premium</option>
                   <option>Disney+</option>
+                  <option>HBO Max</option>
+                  <option>Apple TV+</option>
                 </optgroup>
                 <optgroup label="Productivity">
                   <option>Microsoft 365</option>
+                  <option>Google Workspace</option>
                   <option>Notion</option>
                   <option>Slack</option>
                 </optgroup>
@@ -47,32 +67,12 @@ function AddSubscription() {
                   <option>Adobe Creative Cloud</option>
                   <option>Figma</option>
                   <option>GitHub Pro</option>
+                  <option>Vercel</option>
+                </optgroup>
+                <optgroup label="Other">
+                  <option>Custom Service...</option>
                 </optgroup>
               </select>
-            </div>
-
-            {/* Plan/Tier */}
-            <div className="form-group">
-              <label className="form-label">Plan / Tier</label>
-              <input
-                className="form-input"
-                type="text"
-                placeholder="e.g. Premium, Individual, Business"
-              />
-            </div>
-
-            {/* Cost with Prefix */}
-            <div className="form-group">
-              <label className="form-label">Cost *</label>
-              <div className="input-prefix">
-                <div className="prefix-symbol">$</div>
-                <input
-                  className="form-input"
-                  type="number"
-                  placeholder="0.00"
-                  step="0.01"
-                />
-              </div>
             </div>
 
             {/* Billing Cycle */}
@@ -86,64 +86,105 @@ function AddSubscription() {
               </select>
             </div>
 
-            {/* Dates */}
+            {/* Cost */}
+            <div className="form-group">
+              <label className="form-label">Cost *</label>
+              <div className="input-prefix">
+                <div className="prefix-symbol">£</div>
+                <input
+                  className="form-input"
+                  type="number"
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            {/* Start Date */}
             <div className="form-group">
               <label className="form-label">Start Date *</label>
               <input
                 className="form-input"
                 type="date"
-                defaultValue="2026-03-23"
+                defaultValue={new Date().toISOString().split("T")[0]}
               />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Expiry Date *</label>
-              <input className="form-input" type="date" />
-              <div className="form-help">
-                When does this subscription renew or expire?
-              </div>
-            </div>
-
-            {/* Notes */}
-            <div className="form-group full">
-              <label className="form-label">Notes</label>
-              <textarea
-                className="form-textarea"
-                placeholder="Add any additional notes about this subscription..."
-              ></textarea>
             </div>
           </div>
 
           <hr className="divider" />
 
-          {/* Reminder Settings */}
+          {/* ── UK BANK DETAILS ── */}
           <div
-            style={{ fontWeight: 700, fontSize: "14px", marginBottom: "14px" }}
+            style={{
+              fontWeight: 700,
+              fontSize: "15px",
+              marginBottom: "20px",
+              paddingBottom: "14px",
+              borderBottom: "1px solid var(--border)",
+            }}
           >
-            🔔 Reminder Settings
+            🏦 UK Bank Details
           </div>
+
           <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label">Alert Before Expiry</label>
-              <select className="form-select">
-                <option>7 days before</option>
-                <option>14 days before</option>
-                <option>30 days before</option>
-                <option>No reminder</option>
-              </select>
+            {/* Account Holder Name */}
+            <div className="form-group full">
+              <label className="form-label">Account Holder Name *</label>
+              <input
+                className="form-input"
+                type="text"
+                placeholder="e.g. John Smith"
+              />
             </div>
+
+            {/* Bank Name */}
+            <div className="form-group full">
+              <label className="form-label">Bank Name *</label>
+              <input
+                className="form-input"
+                type="text"
+                placeholder="e.g. Barclays, HSBC, Lloyds, NatWest"
+              />
+            </div>
+
+            {/* Sort Code */}
             <div className="form-group">
-              <label className="form-label">Auto-Renew</label>
-              <select className="form-select">
-                <option>Yes — auto-renews</option>
-                <option>No — manual renewal</option>
-              </select>
+              <label className="form-label">Sort Code *</label>
+              <input
+                className="form-input"
+                type="text"
+                placeholder="12-34-56"
+                value={sortCode}
+                onChange={handleSortCode}
+                maxLength={8}
+              />
+              <div className="form-help">Format: 12-34-56 (6 digits)</div>
+            </div>
+
+            {/* Account Number */}
+            <div className="form-group">
+              <label className="form-label">Account Number *</label>
+              <input
+                className="form-input"
+                type="text"
+                placeholder="12345678"
+                maxLength={8}
+                onInput={(e) => {
+                  e.target.value = e.target.value
+                    .replace(/\D/g, "")
+                    .slice(0, 8);
+                }}
+              />
+              <div className="form-help">8-digit UK account number</div>
             </div>
           </div>
 
-          {/* Actions */}
+          {/* ── FORM ACTIONS ── */}
           <div className="form-actions">
-            <button className="btn btn-secondary">Cancel</button>
+            <Link to="/dashboard/subscriptions">
+              <button className="btn btn-secondary">Cancel</button>
+            </Link>
             <button className="btn btn-primary">✅ Save Subscription</button>
           </div>
         </div>
