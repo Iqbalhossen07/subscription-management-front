@@ -1,54 +1,188 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+} from "lucide-react";
 
+// ── DATA ──
+const allSubscriptions = [
+  {
+    id: 1,
+    service: "Netflix",
+    logo: "N",
+    color: "#E50914",
+    plan: "Premium",
+    start: "Apr 15, 2025",
+    expiry: "Apr 15, 2026",
+    cost: "$22.99",
+    billing: "Monthly",
+    status: "active",
+  },
+  {
+    id: 2,
+    service: "Spotify",
+    logo: "S",
+    color: "#1DB954",
+    plan: "Individual",
+    start: "Apr 2, 2025",
+    expiry: "Apr 2, 2026",
+    cost: "$9.99",
+    billing: "Monthly",
+    status: "active",
+  },
+  {
+    id: 3,
+    service: "Adobe CC",
+    logo: "A",
+    color: "#CC4B37",
+    plan: "All Apps",
+    start: "Mar 28, 2025",
+    expiry: "Mar 28, 2026",
+    cost: "$54.99",
+    billing: "Monthly",
+    status: "expiring",
+  },
+  {
+    id: 4,
+    service: "Figma Pro",
+    logo: "Fg",
+    color: "#F24E1E",
+    plan: "Professional",
+    start: "Apr 4, 2025",
+    expiry: "Apr 4, 2026",
+    cost: "$15.00",
+    billing: "Monthly",
+    status: "expiring",
+  },
+  {
+    id: 5,
+    service: "GitHub Pro",
+    logo: "G",
+    color: "#181717",
+    plan: "Developer",
+    start: "Mar 20, 2025",
+    expiry: "Mar 20, 2026",
+    cost: "$4.00",
+    billing: "Monthly",
+    status: "expired",
+  },
+  {
+    id: 6,
+    service: "Notion Pro",
+    logo: "Nt",
+    color: "#000000",
+    plan: "Plus",
+    start: "Jan 10, 2026",
+    expiry: "Jan 10, 2027",
+    cost: "$8.00",
+    billing: "Monthly",
+    status: "active",
+  },
+];
+
+// ── TAB CONFIG ──
+const TABS = [
+  { key: "all", label: "All" },
+  { key: "active", label: "Active" },
+  { key: "expiring", label: "Expiring" },
+  { key: "expired", label: "Expired" },
+];
+
+// ── STATUS CONFIG ──
+const STATUS_CONFIG = {
+  active: {
+    label: "Active",
+    icon: CheckCircle2,
+    className: "badge active",
+  },
+  expiring: {
+    label: "Expiring",
+    icon: AlertCircle,
+    className: "badge expiring",
+  },
+  expired: {
+    label: "Expired",
+    icon: XCircle,
+    className: "badge expired",
+  },
+};
+
+// ── STATUS BADGE COMPONENT ──
+function StatusBadge({ status }) {
+  const { label, icon: Icon, className } = STATUS_CONFIG[status];
+  return (
+    <span
+      className={className}
+      style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}
+    >
+      <Icon size={12} />
+      {label}
+    </span>
+  );
+}
+
+// ── MAIN COMPONENT ──
 function Subscriptions() {
-  // ফিল্টার করার জন্য একটি স্টেট (ভবিষ্যতে কাজে লাগবে)
   const [activeTab, setActiveTab] = useState("all");
+
+  const filteredSubs =
+    activeTab === "all"
+      ? allSubscriptions
+      : allSubscriptions.filter((s) => s.status === activeTab);
+
+  const getCount = (key) =>
+    key === "all"
+      ? allSubscriptions.length
+      : allSubscriptions.filter((s) => s.status === key).length;
 
   return (
     <div className="page active">
       {/* ── SECTION HEADER ── */}
       <div className="section-header">
         <div>
-          <div className="section-title">Subscriptions</div>
-          <div className="section-subtitle">
+          <h1 className="section-title">Subscriptions</h1>
+          <p className="section-subtitle">
             Manage all your active and past subscriptions
-          </div>
+          </p>
         </div>
         <Link to="/dashboard/add-subscription">
-          <button className="btn btn-primary">➕ Add Subscription</button>
+          <button className="btn btn-primary">
+            <Plus size={16} />
+            Add Subscription
+          </button>
         </Link>
       </div>
 
-      {/* ── TAB BAR ── */}
+      {/* ── TABS ── */}
       <div className="tab-bar">
-        <div
-          className={`tab ${activeTab === "all" ? "active" : ""}`}
-          onClick={() => setActiveTab("all")}
-        >
-          All (12)
-        </div>
-        <div
-          className={`tab ${activeTab === "active" ? "active" : ""}`}
-          onClick={() => setActiveTab("active")}
-        >
-          Active (7)
-        </div>
-        <div
-          className={`tab ${activeTab === "expiring" ? "active" : ""}`}
-          onClick={() => setActiveTab("expiring")}
-        >
-          Expiring (3)
-        </div>
-        <div
-          className={`tab ${activeTab === "expired" ? "active" : ""}`}
-          onClick={() => setActiveTab("expired")}
-        >
-          Expired (2)
-        </div>
+        {TABS.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActiveTab(key)}
+            className={`tab ${activeTab === key ? "active" : ""}`}
+          >
+            {label}
+            <span
+              style={{
+                marginLeft: "6px",
+                fontSize: "11px",
+                fontWeight: 700,
+                opacity: activeTab === key ? 0.6 : 0.35,
+              }}
+            >
+              ({getCount(key)})
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* ── SUBSCRIPTIONS TABLE ── */}
+      {/* ── TABLE ── */}
       <div className="table-wrapper">
         <table>
           <thead>
@@ -59,274 +193,94 @@ function Subscriptions() {
               <th>Cost</th>
               <th>Billing</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th style={{ textAlign: "center" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {/* Netflix */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#ff6b35" }}
-                  >
-                    Nc
-                  </div>
-                  <div>
-                    <div className="service-name">Netflix</div>
-                    <div className="service-plan">Premium</div>
-                  </div>
-                </div>
-              </td>
-              <td>Apr 15, 2025</td>
-              <td>Apr 15, 2026</td>
-              <td>
-                <div className="cost-val">$22.99</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge active">Active</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button
-                    className="btn btn-secondary btn-sm btn-icon"
-                    title="Edit"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    className="btn btn-secondary btn-sm btn-icon"
-                    title="Delete"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+            {filteredSubs.length > 0 ? (
+              filteredSubs.map((sub) => (
+                <tr key={sub.id} className="group">
+                  {/* Service */}
+                  <td>
+                    <div className="td-service">
+                      <div
+                        className="service-logo"
+                        style={{ backgroundColor: sub.color }}
+                      >
+                        {sub.logo}
+                      </div>
+                      <div>
+                        <div className="service-name">{sub.service}</div>
+                        <div className="service-plan">{sub.plan}</div>
+                      </div>
+                    </div>
+                  </td>
 
-            {/* Spotify */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#1db954" }}
+                  {/* Start Date */}
+                  <td
+                    style={{ color: "var(--text-muted)", fontStyle: "italic" }}
                   >
-                    Sp
-                  </div>
-                  <div>
-                    <div className="service-name">Spotify</div>
-                    <div className="service-plan">Individual</div>
-                  </div>
-                </div>
-              </td>
-              <td>Apr 2, 2025</td>
-              <td>Apr 2, 2026</td>
-              <td>
-                <div className="cost-val">$9.99</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge active">Active</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    ✏️
-                  </button>
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+                    {sub.start}
+                  </td>
 
-            {/* Adobe CC */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#cc4b37" }}
-                  >
-                    Ac
-                  </div>
-                  <div>
-                    <div className="service-name">Adobe Creative Cloud</div>
-                    <div className="service-plan">All Apps</div>
-                  </div>
-                </div>
-              </td>
-              <td>Mar 28, 2025</td>
-              <td>Mar 28, 2026</td>
-              <td>
-                <div className="cost-val">$54.99</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge expiring">Expiring Soon</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    ✏️
-                  </button>
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+                  {/* Expiry Date */}
+                  <td>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        fontWeight: 600,
+                        color: "var(--text-secondary)",
+                      }}
+                    >
+                      <Clock size={13} style={{ color: "var(--text-muted)" }} />
+                      {sub.expiry}
+                    </div>
+                  </td>
 
-            {/* Figma */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#f24e1e" }}
-                  >
-                    Fg
-                  </div>
-                  <div>
-                    <div className="service-name">Figma Pro</div>
-                    <div className="service-plan">Professional</div>
-                  </div>
-                </div>
-              </td>
-              <td>Apr 4, 2025</td>
-              <td>Apr 4, 2026</td>
-              <td>
-                <div className="cost-val">$15.00</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge expiring">Expiring Soon</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    ✏️
-                  </button>
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+                  {/* Cost */}
+                  <td>
+                    <span className="cost-val">{sub.cost}</span>
+                  </td>
 
-            {/* Microsoft 365 */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#0078d4" }}
-                  >
-                    Ms
-                  </div>
-                  <div>
-                    <div className="service-name">Microsoft 365</div>
-                    <div className="service-plan">Business</div>
-                  </div>
-                </div>
-              </td>
-              <td>May 1, 2025</td>
-              <td>May 1, 2026</td>
-              <td>
-                <div className="cost-val">$12.50</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge active">Active</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    ✏️
-                  </button>
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+                  {/* Billing */}
+                  <td>
+                    <span className="billing-badge">{sub.billing}</span>
+                  </td>
 
-            {/* GitHub */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#ea4335" }}
-                  >
-                    Gh
-                  </div>
-                  <div>
-                    <div className="service-name">GitHub Pro</div>
-                    <div className="service-plan">Developer</div>
-                  </div>
-                </div>
-              </td>
-              <td>Mar 20, 2025</td>
-              <td>Mar 20, 2026</td>
-              <td>
-                <div className="cost-val">$4.00</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge expired">Expired</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    ✏️
-                  </button>
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+                  {/* Status */}
+                  <td>
+                    <StatusBadge status={sub.status} />
+                  </td>
 
-            {/* Notion */}
-            <tr>
-              <td>
-                <div className="td-service">
-                  <div
-                    className="service-logo"
-                    style={{ background: "#7c3aed" }}
-                  >
-                    Nt
+                  {/* Actions */}
+                  <td>
+                    <div className="actions">
+                      <button className="btn-edit" title="Edit">
+                        <Pencil size={15} />
+                      </button>
+                      <button className="btn-delete" title="Delete">
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              /* ── EMPTY STATE ── */
+              <tr>
+                <td colSpan={7}>
+                  <div className="empty-state">
+                    <div className="empty-icon">📭</div>
+                    <div className="empty-title">No subscriptions found</div>
+                    <div className="empty-desc">
+                      Try a different filter or add a new subscription
+                    </div>
                   </div>
-                  <div>
-                    <div className="service-name">Notion Pro</div>
-                    <div className="service-plan">Plus</div>
-                  </div>
-                </div>
-              </td>
-              <td>Jan 10, 2026</td>
-              <td>Jan 10, 2027</td>
-              <td>
-                <div className="cost-val">$8.00</div>
-              </td>
-              <td>Monthly</td>
-              <td>
-                <span className="badge active">Active</span>
-              </td>
-              <td>
-                <div className="actions">
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    ✏️
-                  </button>
-                  <button className="btn btn-secondary btn-sm btn-icon">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

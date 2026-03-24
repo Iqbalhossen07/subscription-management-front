@@ -659,3 +659,47 @@ tbody td {
     border-radius: 5px; white-space: nowrap;
     pointer-events: none; z-index: 1000;
 }
+
+
+/* ── ACTION BUTTONS ── */
+.btn-edit {
+    width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 10px; cursor: pointer;
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #3b82f6;
+    transition: all 0.15s ease;
+}
+.btn-edit:hover {
+    background: #2563eb; border-color: #2563eb; color: white;
+    box-shadow: 0 3px 10px rgba(37,99,235,0.25);
+    transform: translateY(-1px);
+}
+.btn-edit:active { transform: scale(0.92); }
+
+.btn-delete {
+    width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 10px; cursor: pointer;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #ef4444;
+    transition: all 0.15s ease;
+}
+.btn-delete:hover {
+    background: #dc2626; border-color: #dc2626; color: white;
+    box-shadow: 0 3px 10px rgba(220,38,38,0.25);
+    transform: translateY(-1px);
+}
+.btn-delete:active { transform: scale(0.92); }
+
+/* ── BILLING BADGE ── */
+.billing-badge {
+    display: inline-flex; align-items: center;
+    font-size: 12px; font-weight: 600;
+    color: #374151;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 4px 12px; border-radius: 8px;
+}
