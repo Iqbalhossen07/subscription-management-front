@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import Swal from "sweetalert2"; // SweetAlert ইমপোর্ট
+import axios from "axios"; // API কল করার জন্য
 import "./Register.css";
-/* Login.css থেকে shared styles (.field-group, .input-wrap, .submit-btn ইত্যাদি) use হবে */
 import "../Login/Login.css";
 
 /* ── Password strength calculator ── */
@@ -27,15 +28,12 @@ function Register() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    name: "", // ব্যাকএন্ডে শুধু 'name' ছিল, তাই firstName lastName বদলে name রাখলাম
     email: "",
     password: "",
-    confirm: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (field) => (e) =>
@@ -43,21 +41,65 @@ function Register() {
 
   const strength = calcStrength(form.password);
   const strengthMeta = STRENGTH_META[strength - 1];
-  const passwordsMatch = form.confirm === "" || form.password === form.confirm;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!passwordsMatch) return;
+
+    // বেসিক ভ্যালিডেশন
+    if (!form.name || !form.email || !form.password) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Oops...",
+        text: "সবগুলো ফিল্ড পূরণ করো ভাই!",
+        confirmButtonColor: "#2563eb",
+      });
+    }
 
     setLoading(true);
-    // তোমার register API call এখানে
-    await new Promise((r) => setTimeout(r, 900)); // placeholder
-    navigate("/dashboard");
+
+    try {
+      // আপনার ব্যাকএন্ড API URL (নিশ্চিত হোন ব্যাকএন্ড চালু আছে)
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        },
+      );
+
+      // সাকসেস মেসেজ
+      Swal.fire({
+        icon: "success",
+        title: "অভিনন্দন ভাই!",
+        text: "আপনার অ্যাকাউন্ট তৈরি হয়ে গেছে।",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // টোকেন সেভ করা (ভবিষ্যতের কাজের জন্য)
+      localStorage.setItem("userToken", response.data.token);
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
+
+      // ২ সেকেন্ড পর ড্যাশবোর্ডে পাঠানো
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (error) {
+      // এরর মেসেজ হ্যান্ডলিং
+      Swal.fire({
+        icon: "error",
+        title: "ভুল হয়েছে!",
+        text: error.response?.data?.message || "সার্ভারে সমস্যা হচ্ছে ভাই!",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      {/* Mobile logo */}
       <div className="register-mobile-logo">
         <div className="register-mobile-logo-icon">📊</div>
         <span className="register-mobile-logo-text">
@@ -65,7 +107,6 @@ function Register() {
         </span>
       </div>
 
-      {/* ── HEADER ── */}
       <div className="register-header">
         <h1 className="register-title">Create your account</h1>
         <p className="register-subtitle">
@@ -73,31 +114,25 @@ function Register() {
         </p>
       </div>
 
-      {/* ── FORM ── */}
       <form className="register-form" onSubmit={handleSubmit} noValidate>
-        {/* First + Last Name */}
-       
-          <div className="field-group">
-            <label className="field-label">First Name *</label>
-            <div className="input-wrap">
-              <span className="input-icon">
-                <User size={15} />
-              </span>
-              <input
-                className="field-input"
-                type="text"
-                placeholder="John"
-                value={form.firstName}
-                onChange={handleChange("firstName")}
-                required
-                autoFocus
-                autoComplete="given-name"
-              />
-            </div>
+        {/* Full Name */}
+        <div className="field-group">
+          <label className="field-label">Full Name *</label>
+          <div className="input-wrap">
+            <span className="input-icon">
+              <User size={15} />
+            </span>
+            <input
+              className="field-input"
+              type="text"
+              placeholder="Enter your full name"
+              value={form.name}
+              onChange={handleChange("name")}
+              required
+              autoFocus
+            />
           </div>
-
-         
-     
+        </div>
 
         {/* Email */}
         <div className="field-group">
@@ -113,7 +148,6 @@ function Register() {
               value={form.email}
               onChange={handleChange("email")}
               required
-              autoComplete="email"
             />
           </div>
         </div>
@@ -132,20 +166,17 @@ function Register() {
               value={form.password}
               onChange={handleChange("password")}
               required
-              autoComplete="new-password"
             />
             <button
               type="button"
               className="eye-btn"
               onClick={() => setShowPassword((v) => !v)}
               tabIndex={-1}
-              aria-label="Toggle password"
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
           </div>
 
-          {/* Strength indicator */}
           {form.password && (
             <div className="strength-wrap">
               <div className="strength-bar">
@@ -165,15 +196,7 @@ function Register() {
           )}
         </div>
 
-       
-
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className="submit-btn"
-          disabled={loading || !passwordsMatch}
-        >
+        <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? (
             "Creating account..."
           ) : (
@@ -184,10 +207,9 @@ function Register() {
         </button>
       </form>
 
-      {/* Switch to Login */}
       <p className="switch-text">
         Already have an account?{" "}
-        <Link to="/login" className="switch-link">
+        <Link to="/auth/login" className="switch-link">
           Sign in
         </Link>
       </p>

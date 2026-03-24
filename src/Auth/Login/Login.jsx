@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import Swal from "sweetalert2"; // SweetAlert ইমপোর্ট
+import axios from "axios"; // API কল করার জন্য
 import "./Login.css";
 
 function Login() {
@@ -14,10 +16,59 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // বেসিক ভ্যালিডেশন
+    if (!form.email || !form.password) {
+      return Swal.fire({
+        icon: "warning",
+        title: "থামুন ভাই!",
+        text: "ইমেইল আর পাসওয়ার্ড তো দিলেন না!",
+        confirmButtonColor: "#2563eb",
+      });
+    }
+
     setLoading(true);
-    // তোমার login API call এখানে
-    await new Promise((r) => setTimeout(r, 800));
-    navigate("/dashboard");
+
+    try {
+      // ব্যাকএন্ডে লগইন রিকোয়েস্ট
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email: form.email,
+          password: form.password,
+        },
+      );
+
+      // সাকসেস মেসেজ
+      Swal.fire({
+        icon: "success",
+        title: "লগইন সফল! 🚀",
+        text: `স্বাগতম ${response.data.name} ভাই, আপনার ড্যাশবোর্ড রেডি।`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      // টোকেন এবং ইউজার ডাটা ব্রাউজারে সেভ করা
+      localStorage.setItem("userToken", response.data.token);
+      localStorage.setItem("userInfo", JSON.stringify(response.data));
+
+      // ২ সেকেন্ড পর ড্যাশবোর্ডে রিডাইরেক্ট
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (error) {
+      // এরর মেসেজ হ্যান্ডলিং (ভুল ইমেইল বা পাসওয়ার্ড)
+      Swal.fire({
+        icon: "error",
+        title: "এক্সেস ডিনাইড!",
+        text:
+          error.response?.data?.message ||
+          "ইমেইল বা পাসওয়ার্ড মনে হয় ভুল দিয়েছেন ভাই!",
+        confirmButtonColor: "#ef4444",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,6 +129,7 @@ function Login() {
               className="eye-btn"
               onClick={() => setShowPassword((v) => !v)}
               tabIndex={-1}
+              aria-label="Toggle password"
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
             </button>
@@ -96,8 +148,7 @@ function Login() {
             "Signing in..."
           ) : (
             <>
-              {" "}
-              Sign in <ArrowRight size={16} />{" "}
+              Sign in <ArrowRight size={16} />
             </>
           )}
         </button>
@@ -106,7 +157,7 @@ function Login() {
       {/* Switch */}
       <p className="switch-text">
         Don't have an account?{" "}
-        <Link to="/register" className="switch-link">
+        <Link to="/auth/register" className="switch-link">
           Create one free
         </Link>
       </p>

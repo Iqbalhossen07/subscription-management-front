@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import Root from "../Root/Root";
 import Dashboard from "../Dashboard/Dashboard/Dashboard";
 import Subscriptions from "../Dashboard/Subscriptions/Subscriptions";
@@ -10,10 +10,28 @@ import AuthLayout from "../Auth/AuthLayout";
 import Login from "../Auth/Login/Login";
 import Register from "../Auth/Register/Register";
 
+// ✅ আপনার বানানো PrivateRoute ইমপোর্ট করুন (পাথ ঠিক আছে কি না দেখে নিন)
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
+
+// 🔓 পাবলিক রাউট গার্ড (এটা এখানেই থাক বা চাইলে এটাও আলাদা ফাইল করতে পারেন)
+const PublicRoute = ({ children }) => {
+  const token = localStorage.getItem("userToken");
+  return token ? <Navigate to="/dashboard" replace /> : children;
+};
+
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Navigate to="/dashboard" replace />,
+  },
+  {
     path: "/dashboard",
-    element: <Root />, // এখানে Component এর বদলে element ব্যবহার করা আধুনিক প্র্যাকটিস
+    element: (
+      // 🔒 আপনার বানানো PrivateRoute দিয়ে ড্যাশবোর্ড লক করা হলো
+      <PrivateRoute>
+        <Root />
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <Dashboard /> },
       { path: "subscriptions", element: <Subscriptions /> },
@@ -25,7 +43,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/auth",
-    element: <AuthLayout />, // এখানে Sidebar/Topbar ছাড়া আলাদা লেআউট হবে
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
     children: [
       { index: true, element: <Login /> },
       { path: "login", element: <Login /> },
@@ -33,6 +55,5 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
 
 export default router;
