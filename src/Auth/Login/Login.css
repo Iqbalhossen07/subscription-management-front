@@ -1,37 +1,8 @@
-/* ── LOGIN FORM STYLES ──
-   These styles apply inside .auth-card
+/* ── REGISTER PAGE ──
+   Shared input / submit styles (same as former Login.css) for Register.
 ── */
 
-/* ── HEADER ── */
-.login-header {
-  margin-bottom: 28px;
-  text-align: center;
-}
-
-.login-title {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-  line-height: 1.2;
-}
-
-.login-subtitle {
-  font-size: 13.5px;
-  color: var(--text-sub);
-  line-height: 1.5;
-}
-
-/* ── FORM ── */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-/* ── FIELD GROUP ── */
+/* ── SHARED FIELD STYLES (Register form) ── */
 .field-group {
   display: flex;
   flex-direction: column;
@@ -64,7 +35,6 @@
   text-decoration: underline;
 }
 
-/* ── INPUT WRAPPER ── */
 .input-wrap {
   position: relative;
   display: flex;
@@ -79,11 +49,6 @@
 .input-wrap:focus-within {
   border-color: var(--blue-light);
   box-shadow: 0 0 0 3.5px rgba(59, 130, 246, 0.13);
-}
-
-.input-wrap.input-error {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .input-icon {
@@ -116,7 +81,6 @@
   padding-right: 44px;
 }
 
-/* Eye button */
 .eye-btn {
   position: absolute;
   right: 11px;
@@ -136,30 +100,6 @@
   color: var(--text-sub);
 }
 
-/* ── REMEMBER ROW ── */
-.remember-row {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  cursor: pointer;
-  width: fit-content;
-}
-
-.remember-row input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--blue);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.remember-row span {
-  font-size: 13px;
-  color: var(--text-sub);
-  user-select: none;
-}
-
-/* ── SUBMIT BUTTON ── */
 .submit-btn {
   width: 100%;
   padding: 13px;
@@ -198,27 +138,6 @@
   transform: none;
 }
 
-/* ── DIVIDER ── */
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 4px 0;
-}
-
-.auth-divider-line {
-  flex: 1;
-  height: 1px;
-  background: #e4e7ec;
-}
-
-.auth-divider-text {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-/* ── SWITCH TEXT ── */
 .switch-text {
   text-align: center;
   font-size: 13.5px;
@@ -239,10 +158,163 @@
   text-decoration: underline;
 }
 
-/* ── FIELD ERROR ── */
+/* Mobile logo */
+.register-mobile-logo {
+  display: none;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 32px;
+}
+
+.register-mobile-logo-icon {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.register-mobile-logo-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--text-main);
+  letter-spacing: -0.3px;
+}
+
+.register-mobile-logo-text span {
+  color: var(--blue);
+}
+
+/* ── HEADER ── */
+.register-header {
+  margin-bottom: 28px;
+}
+
+.register-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.register-subtitle {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
+
+/* ── FORM ── */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── 2-COLUMN GRID ── */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ── PASSWORD STRENGTH ── */
+.strength-wrap {
+  margin-top: 7px;
+}
+
+.strength-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.strength-seg {
+  flex: 1;
+  height: 3.5px;
+  border-radius: 10px;
+  background: var(--border);
+  transition: background 0.25s ease;
+}
+
+.strength-seg.filled-1 { background: #ef4444; } /* Weak   */
+.strength-seg.filled-2 { background: #f59e0b; } /* Fair   */
+.strength-seg.filled-3 { background: #3b82f6; } /* Good   */
+.strength-seg.filled-4 { background: #10b981; } /* Strong */
+
+.strength-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.strength-label.s1 { color: #ef4444; }
+.strength-label.s2 { color: #f59e0b; }
+.strength-label.s3 { color: #3b82f6; }
+.strength-label.s4 { color: #10b981; }
+
+/* ── MISMATCH ERROR ── */
 .field-error {
   font-size: 11.5px;
   color: #ef4444;
   font-weight: 500;
   margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── TERMS ROW ── */
+.terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  cursor: pointer;
+}
+
+.terms-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blue);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.terms-row span {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.55;
+  user-select: none;
+}
+
+.terms-link {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.terms-link:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .register-mobile-logo {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
 }

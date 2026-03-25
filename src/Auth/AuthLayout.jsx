@@ -21,27 +21,18 @@ function AuthLayout() {
   const isLogin = location.pathname === "/login" || location.pathname === "/";
 
   return (
-    <div className="auth-page">
+    <div className="auth-page ">
       {/* ── TOPBAR ── */}
-      <header className="auth-topbar">
-        <a className="auth-logo" href="/">
-          <div className="auth-logo-icon">📊</div>
-          <span className="auth-logo-text">
-            Sub<span>Track</span>
-          </span>
-        </a>
-
-        <div className="auth-topbar-right">
-          {isLogin ? (
-            <>
-              Don't have an account? <Link to="/register">Create one free</Link>
-            </>
-          ) : (
-            <>
-              Already have an account? <Link to="/login">Sign in</Link>
-            </>
-          )}
-        </div>
+      <header className=" flex justify-center items-center  mt-8">
+       
+          <Link to="/">
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="w-32 h-auto block mt-6"
+            />
+          </Link>
+       
       </header>
 
       {/* ── CENTERED CONTENT ── */}
@@ -65,16 +56,6 @@ function AuthLayout() {
               for things you forgot about.
             </p>
 
-            {/* Stats */}
-            <div className="auth-stats">
-              {STATS.map(({ val, label }) => (
-                <div key={label} className="auth-stat">
-                  <div className="auth-stat-val">{val}</div>
-                  <div className="auth-stat-label">{label}</div>
-                </div>
-              ))}
-            </div>
-
             {/* Perks */}
             <div className="auth-perks">
               {PERKS.map((p) => (
@@ -85,18 +66,6 @@ function AuthLayout() {
                   <span>{p}</span>
                 </div>
               ))}
-            </div>
-
-            {/* Testimonial */}
-            <div className="auth-testimonial">
-              <div className="auth-testimonial-avatar">SK</div>
-              <div>
-                <p className="auth-testimonial-quote">
-                  "SubTrack saved me over £200 by catching subscriptions I'd
-                  completely forgotten about."
-                </p>
-                <p className="auth-testimonial-author">Sarah K. — London, UK</p>
-              </div>
             </div>
           </div>
 

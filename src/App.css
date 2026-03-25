@@ -167,8 +167,22 @@ body {
     border-bottom: 1px solid var(--border);
     padding: 0 28px;
     height: 60px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 50;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    position: sticky; 
+    top: 0; 
+    z-index: 50;
+    /* ডেক্সটপের জন্য মার্জিন ০ করে দিলাম */
+    margin-top: 0;
+}
+
+/* শুধুমাত্র মোবাইল ভিউর জন্য (৭৬৮ পিক্সেলের নিচে) */
+@media (max-width: 768px) {
+    .topbar {
+        margin-top: 40px;
+        text-align: center;
+    }
 }
 
 .topbar-left { display: flex; align-items: center; gap: 12px; }
@@ -702,4 +716,29 @@ tbody td {
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     padding: 4px 12px; border-radius: 8px;
+}
+
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* এই লাইনটি ডানে-বামে স্ক্রল করার সুযোগ দিবে */
+  -webkit-overflow-scrolling: touch; /* আইফোনে স্ক্রলিং স্মুথ করার জন্য */
+  border-radius: 8px; /* টেবিলের কোণাগুলো সুন্দর দেখাবে */
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  min-width: 800px; /* এইটা খুবই গুরুত্বপূর্ণ! টেবিলকে অন্তত ৮০০ পিক্সেল চওড়া রাখবে যাতে কলামগুলো গাদাগাদি না হয় */
+  border-collapse: collapse;
+}
+
+/* মোবাইল স্ক্রিনে স্ক্রলবারটা যাতে সুন্দর দেখায় (ঐচ্ছিক) */
+.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }

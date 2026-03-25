@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
-import Swal from "sweetalert2"; // SweetAlert ইমপোর্ট
-import axios from "axios"; // API কল করার জন্য
+import Swal from "sweetalert2";
+import axios from "axios";
 import "./Login.css";
 
 function Login() {
@@ -17,12 +17,11 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // বেসিক ভ্যালিডেশন
     if (!form.email || !form.password) {
       return Swal.fire({
         icon: "warning",
-        title: "থামুন ভাই!",
-        text: "ইমেইল আর পাসওয়ার্ড তো দিলেন না!",
+        title: "Wait!",
+        text: "You didn’t provide the email and password!",
         confirmButtonColor: "#2563eb",
       });
     }
@@ -30,7 +29,6 @@ function Login() {
     setLoading(true);
 
     try {
-      // ব্যাকএন্ডে লগইন রিকোয়েস্ট
       const response = await axios.post(
         "http://localhost:5000/api/auth/login",
         {
@@ -39,31 +37,27 @@ function Login() {
         },
       );
 
-      // সাকসেস মেসেজ
       Swal.fire({
         icon: "success",
-        title: "লগইন সফল! 🚀",
-        text: `স্বাগতম ${response.data.name} ভাই, আপনার ড্যাশবোর্ড রেডি।`,
+        title: "Login successful.! 🚀",
+        text: `Welcome ${response.data.name} your dashboard is ready.`,
         timer: 2000,
         showConfirmButton: false,
       });
 
-      // টোকেন এবং ইউজার ডাটা ব্রাউজারে সেভ করা
       localStorage.setItem("userToken", response.data.token);
       localStorage.setItem("userInfo", JSON.stringify(response.data));
 
-      // ২ সেকেন্ড পর ড্যাশবোর্ডে রিডাইরেক্ট
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);
     } catch (error) {
-      // এরর মেসেজ হ্যান্ডলিং (ভুল ইমেইল বা পাসওয়ার্ড)
       Swal.fire({
         icon: "error",
-        title: "এক্সেস ডিনাইড!",
+        title: "Access denied.",
         text:
           error.response?.data?.message ||
-          "ইমেইল বা পাসওয়ার্ড মনে হয় ভুল দিয়েছেন ভাই!",
+          "It seems you have entered the wrong email or password",
         confirmButtonColor: "#ef4444",
       });
     } finally {
@@ -71,79 +65,81 @@ function Login() {
     }
   };
 
+  const inputWrapClass =
+    "relative flex items-center overflow-hidden rounded-xl border-[1.5px] border-[#e4e7ec] bg-white transition focus-within:border-blue-400 focus-within:ring-[3.5px] focus-within:ring-blue-500/15";
+
+  const inputClass =
+    "w-full border-0 bg-transparent py-2.5 text-sm leading-snug text-[#0d1117] outline-none placeholder:text-[#b0b9c8]";
+
   return (
     <>
-      {/* ── HEADER ── */}
-      <div className="login-header">
-        <h1 className="login-title">Welcome back 👋</h1>
-        <p className="login-subtitle">
-          Sign in to your SubTrack account to continue
+      <div className="mb-7 text-center">
+        <h1 className="mb-1.5 font-(family-name:--font-display) text-2xl font-extrabold tracking-tight text-[#0d1117]">
+          Welcome back 👋
+        </h1>
+        <p className="text-[13.5px] leading-relaxed text-gray-500">
+          Sign in to your Track Management account to continue
         </p>
       </div>
 
-      {/* ── FORM ── */}
-      <form className="login-form" onSubmit={handleSubmit} noValidate>
-        {/* Email */}
-        <div className="field-group">
-          <label className="field-label">Email address</label>
-          <div className="input-wrap">
-            <span className="input-icon">
-              <Mail size={15} />
-            </span>
-            <input
-              className="field-input"
-              type="email"
-              placeholder="you@example.com"
-              value={form.email}
-              onChange={handleChange("email")}
-              required
-              autoComplete="email"
-              autoFocus
-            />
-          </div>
-        </div>
+      <form
+        className="flex flex-col gap-4.5"
+        onSubmit={handleSubmit}
+        noValidate
+      >
+      
 
-        {/* Password */}
-        <div className="field-group">
-          <div className="field-label-row">
-            <label className="field-label">Password</label>
-            <a href="#" className="forgot-link">
-              Forgot password?
-            </a>
-          </div>
-          <div className="input-wrap">
-            <span className="input-icon">
-              <Lock size={15} />
-            </span>
-            <input
-              className="field-input has-right-icon"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={form.password}
-              onChange={handleChange("password")}
-              required
-              autoComplete="current-password"
-            />
-            <button
-              type="button"
-              className="eye-btn"
-              onClick={() => setShowPassword((v) => !v)}
-              tabIndex={-1}
-              aria-label="Toggle password"
-            >
-              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-            </button>
-          </div>
-        </div>
+              <div className="field-group">
+                  <label className="field-label">Email address *</label>
+                  <div className="input-wrap">
+                    <span className="input-icon">
+                      <Mail size={15} />
+                    </span>
+                    <input
+                      className="field-input"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={form.email}
+                      onChange={handleChange("email")}
+                      required
+                    />
+                  </div>
+                </div>
 
-        {/* Remember me */}
-        <label className="remember-row">
-          <input type="checkbox" />
-          <span>Remember me for 30 days</span>
-        </label>
+       
 
-        {/* Submit */}
-        <button type="submit" className="submit-btn" disabled={loading}>
+         <div className="field-group">
+                  <label className="field-label">Password *</label>
+                  <div className="input-wrap">
+                    <span className="input-icon">
+                      <Lock size={15} />
+                    </span>
+                    <input
+                      className="field-input has-right-icon"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={form.password}
+                      onChange={handleChange("password")}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="eye-btn "
+                      onClick={() => setShowPassword((v) => !v)}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+        
+                
+                </div>
+
+        <button
+          type="submit"
+          className="mt-1 submit-btn"
+          disabled={loading}
+        >
           {loading ? (
             "Signing in..."
           ) : (
@@ -154,10 +150,12 @@ function Login() {
         </button>
       </form>
 
-      {/* Switch */}
-      <p className="switch-text">
-        Don't have an account?{" "}
-        <Link to="/auth/register" className="switch-link">
+      <p className="mt-[22px] text-center text-[13.5px] text-gray-500">
+        Don&apos;t have an account?{" "}
+        <Link
+          to="/auth/register"
+          className="font-[family-name:var(--font-display)] font-bold text-blue-600 transition-colors hover:text-blue-800 hover:underline"
+        >
           Create one free
         </Link>
       </p>

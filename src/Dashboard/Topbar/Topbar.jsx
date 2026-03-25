@@ -6,29 +6,17 @@ function Topbar({ toggleSidebar }) {
 
   // URL অনুযায়ী পেজের নাম ঠিক করার জন্য
   const getPageTitle = () => {
-    if (location.pathname.includes("subscriptions")) return "Subscriptions";
-    return "Dashboard";
+    if (location.pathname.includes("Welcome to Track Subscription Admin Panel"))
+      return "Welcome to Track Subscription Admin Panel";
+    return "Welcome to Track Subscription Admin Panel";
   };
 
   return (
-    <header className="topbar">
+    <header className="topbar mt-20 md:mt-0">
       <div className="topbar-left">
-        <button className="hamburger" onClick={toggleSidebar}>
-          ☰
-        </button>
         <div>
           <div className="page-title">{getPageTitle()}</div>
         </div>
-      </div>
-      <div className="topbar-right">
-        <div className="topbar-search">🔍 &nbsp; Search subscriptions...</div>
-        <button className="icon-btn" data-tip="Notifications">
-          🔔
-          <span className="notif-dot"></span>
-        </button>
-        <button className="icon-btn" data-tip="Settings">
-          ⚙️
-        </button>
       </div>
     </header>
   );

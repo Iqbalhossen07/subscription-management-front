@@ -4,7 +4,6 @@ import { User, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import Swal from "sweetalert2"; // SweetAlert ইমপোর্ট
 import axios from "axios"; // API কল করার জন্য
 import "./Register.css";
-import "../Login/Login.css";
 
 /* ── Password strength calculator ── */
 function calcStrength(password) {
@@ -50,7 +49,7 @@ function Register() {
       return Swal.fire({
         icon: "warning",
         title: "Oops...",
-        text: "সবগুলো ফিল্ড পূরণ করো ভাই!",
+        text: "Please fill in all the fields",
         confirmButtonColor: "#2563eb",
       });
     }
@@ -71,8 +70,8 @@ function Register() {
       // সাকসেস মেসেজ
       Swal.fire({
         icon: "success",
-        title: "অভিনন্দন ভাই!",
-        text: "আপনার অ্যাকাউন্ট তৈরি হয়ে গেছে।",
+        title: "Welcome!",
+        text: "Your account has been created",
         timer: 2000,
         showConfirmButton: false,
       });
@@ -89,8 +88,9 @@ function Register() {
       // এরর মেসেজ হ্যান্ডলিং
       Swal.fire({
         icon: "error",
-        title: "ভুল হয়েছে!",
-        text: error.response?.data?.message || "সার্ভারে সমস্যা হচ্ছে ভাই!",
+        title: "wrong!",
+        text:
+          error.response?.data?.message || "There is a problem with the server",
         confirmButtonColor: "#ef4444",
       });
     } finally {
@@ -162,7 +162,7 @@ function Register() {
             <input
               className="field-input has-right-icon"
               type={showPassword ? "text" : "password"}
-              placeholder="Min. 8 characters"
+              placeholder="Enter your password"
               value={form.password}
               onChange={handleChange("password")}
               required

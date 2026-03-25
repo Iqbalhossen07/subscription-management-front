@@ -21,7 +21,7 @@ function Root() {
       <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
 
       {/* MAIN CONTENT AREA */}
-      <div className="main">
+      <div className="main overflow-hidden">
         <Topbar toggleSidebar={toggleSidebar} />
 
         <div className="content">

@@ -12,6 +12,7 @@ import Register from "../Auth/Register/Register";
 
 // ✅ আপনার বানানো PrivateRoute ইমপোর্ট করুন (পাথ ঠিক আছে কি না দেখে নিন)
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import Subscription_details from "../Dashboard/Subscription-details/Subscription_details";
 
 // 🔓 পাবলিক রাউট গার্ড (এটা এখানেই থাক বা চাইলে এটাও আলাদা ফাইল করতে পারেন)
 const PublicRoute = ({ children }) => {
@@ -36,9 +37,10 @@ const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: "subscriptions", element: <Subscriptions /> },
       { path: "add-subscription", element: <AddSubscription /> },
-      { path: "edit-subscription", element: <EditSubscription /> },
+      { path: "edit-subscription/:id", element: <EditSubscription /> },
       { path: "services", element: <Services /> },
       { path: "profile", element: <Profile /> },
+      { path: "subscription-details/:id", element: <Subscription_details /> },
     ],
   },
   {

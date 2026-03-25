@@ -32,7 +32,7 @@ function Profile() {
   // ২. Cloudinary-তে ইমেজ আপলোড ও প্রোফাইল আপডেট
   const handleImageUpload = async () => {
     if (!imageFile)
-      return Swal.fire("ভুল!", "আগে একটি ছবি সিলেক্ট করুন!", "error");
+      return Swal.fire("Wrong!", "Please select an image first.!", "error");
 
     setLoading(true);
     const formData = new FormData();
@@ -55,10 +55,10 @@ function Profile() {
       );
 
       localStorage.setItem("userInfo", JSON.stringify(data));
-      Swal.fire("সফল!", "প্রোফাইল ছবি আপডেট হয়েছে!", "success");
+      Swal.fire("success!", "The profile picture has been updated.!", "success");
       setLoading(false);
     } catch (err) {
-      Swal.fire("ব্যর্থ!", "ইমেজ আপলোড করা যায়নি!", "error");
+      Swal.fire("Oopps!", "The image could not be uploaded.!", "error");
       setLoading(false);
     }
   };
@@ -74,9 +74,9 @@ function Profile() {
         config,
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
-      Swal.fire("সফল!", "নাম পরিবর্তন করা হয়েছে।", "success");
+      Swal.fire("success!", "The name has been changed.।", "success");
     } catch (err) {
-      Swal.fire("ব্যর্থ!", "সার্ভারে সমস্যা!", "error");
+      Swal.fire("Oopps!", "There is a problem with the server.!", "error");
     }
   };
 
@@ -84,7 +84,7 @@ function Profile() {
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      return Swal.fire("ভুল!", "পাসওয়ার্ড দুটি মেলেনি!", "error");
+      return Swal.fire("Wrong!", "The two passwords do not match.!", "error");
     }
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -94,21 +94,21 @@ function Profile() {
         config,
       );
       setPasswordData({ newPassword: "", confirmPassword: "" });
-      Swal.fire("সফল!", "পাসওয়ার্ড আপডেট হয়েছে।", "success");
+      Swal.fire("success!", "The password has been updated.", "success");
     } catch (err) {
-      Swal.fire("ব্যর্থ!", "পাসওয়ার্ড পরিবর্তন করা যায়নি!", "error");
+      Swal.fire("Oopps!", "The password could not be changed!", "error");
     }
   };
 
   // ৫. একাউন্ট ডিলিট
   const handleDeleteAccount = () => {
     Swal.fire({
-      title: "আপনি কি নিশ্চিত?",
-      text: "একবার ডিলিট করলে আপনার সব ডাটা চিরতরে মুছে যাবে!",
+      title: "Are you sure?",
+      text: "Once deleted, all your data will be permanently erased.!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#ef4444",
-      confirmButtonText: "হ্যাঁ, ডিলিট করুন!",
+      confirmButtonText: "Yes, delete it.",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -117,7 +117,7 @@ function Profile() {
           localStorage.clear();
           window.location.href = "/auth/login";
         } catch (err) {
-          Swal.fire("ভুল!", "ডিলিট করা যায়নি!", "error");
+          Swal.fire("Wrong!", "Could not delete.!", "error");
         }
       }
     });
@@ -178,12 +178,12 @@ function Profile() {
             <div className="profile-name">{name}</div>
             <div className="profile-email-small">{storedUser?.email}</div>
             <button
-              className="btn btn-secondary"
-              style={{ width: "100%", marginTop: "15px" }}
+              className="btn btn-secondary flex text-center items-center"
+              style={{ width: "100%", marginTop: "15px", textAlign:"center" }}
               onClick={handleImageUpload}
               disabled={loading}
             >
-              {loading ? "⌛ Uploading..." : "💾 Update Photo"}
+              {loading ? "⌛ Uploading..." : " Update Photo"}
             </button>
           </div>
         </div>
